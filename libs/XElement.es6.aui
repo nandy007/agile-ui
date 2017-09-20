@@ -1,0 +1,88 @@
+<script type="text/javascript">
+// ie等不支持class定义，故通过字符串方式实例化function调用
+(function (factory) {
+    const XElement = factory();
+    module.exports = XElement;
+})(function () {
+
+    class IElement extends HTMLElement {
+        constructor() {
+            super();
+            this.component = {};
+            this.bindModule();
+        }
+
+        bindModule() {
+            const Component = this.$anestor;
+
+            const component = this.component = typeof Component === 'function' ? new Component() : {};
+
+            component.template = Component.template || '';
+            component.$el = this;
+
+            this.createdCallback();
+        }
+
+        emit(funcName, args, cb) {
+            const component = this.component, func = component[funcName];
+            if (!func) return;
+            setTimeout(function () {
+                cb && cb();
+                func.apply(component, args);
+            }, 1);
+        }
+
+        // 创建元素实例
+        createdCallback(...args) {
+            const _this = this;
+            this.emit('created', args, function () {
+
+                const template = _this.component.template;
+
+                if (template) {
+
+                    const $fragment = document.createDocumentFragment();
+                    Array.from(_this.childNodes).forEach(function ($child) {
+                        $fragment.appendChild($child);
+                    });
+
+                    _this.innerHTML = template;
+                    const $child = _this.querySelector('child');
+                    if ($child) {
+                        $child.parentNode.replaceChild($fragment, $child);
+                    }
+                }
+
+            });
+        }
+
+        // 向文档插入实例
+        connectedCallback(...args) {
+            this.emit('attached', args);
+        }
+        // 从文档中移除实例
+        disconnectedCallback(...args) {
+            this.emit('detached', args);
+        }
+        // 添加，移除，或修改一个属性
+        attributeChangedCallback(...args) {//attrName, oldVal, newVal
+            this.emit('attributeChanged', args);
+        }
+    }
+
+
+
+    return function (anestor) {
+        class XElement extends IElement {
+            get $anestor() {
+                return anestor;
+            }
+
+            static get observedAttributes() { return anestor.observedAttributes || []; }
+        }
+
+        return XElement;
+    };
+
+})
+</script>
