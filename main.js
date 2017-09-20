@@ -1,1 +1,1 @@
-require('AuiComponent');
+require('./index');

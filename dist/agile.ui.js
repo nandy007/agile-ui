@@ -73,21 +73,36 @@ __webpack_require__(1);
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+(function (factory) {
+    const aui = factory();
+    if ((typeof module === "object" || typeof module === "function") && typeof module.exports === "object") {
+        module.exports = aui;
+    }
+
+    const modName = window.__AGILE_UI_ID__ || 'aui';
+
+    if (typeof window.define === "function" && window.define.amd) {
+        window.define(modName, [], function () {
+            return aui;
+        });
+    }
+
+    if (!window[modName]) window[modName] = aui;
+})(function () {
+    return {
+        'AuiComponent': __webpack_require__(2)
+    };
+});
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
 
 
 (function (factory) {
     const AuiComponent = factory();
-    if ((typeof module === "object" || typeof module === "function") && typeof module.exports === "object") {
-        module.exports = AuiComponent;
-    }
-
-    if (typeof window.define === "function" && window.define.amd) {
-        window.define("AuiComponent", [], function () {
-            return AuiComponent;
-        });
-    }
-
-    if (!window.AuiComponent) window.AuiComponent = AuiComponent;
+    module.exports = AuiComponent;
 })(function () {
     function formateName(name) {
         if (!name) return '';
@@ -142,7 +157,7 @@ __webpack_require__(1);
 
             const anestor = this.$anestor;
 
-            const XElement = __webpack_require__(2)(AuiComponent.isEs5)(anestor);
+            const XElement = __webpack_require__(3)(AuiComponent.isEs5)(anestor);
 
             // 如果组件已经被定义则不重复定义
             if (customElements.get(this.tag)) return;
@@ -153,13 +168,13 @@ __webpack_require__(1);
         }
     };
 
-    __webpack_require__(6);
+    __webpack_require__(7);
 
     return AuiComponent;
 });
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (factory) {
@@ -167,12 +182,12 @@ __webpack_require__(1);
     module.exports = XElement;
 })(function () {
     return function (isEs5) {
-        return isEs5 ? __webpack_require__(3) : __webpack_require__(4);
+        return isEs5 ? __webpack_require__(4) : __webpack_require__(5);
     };
 });
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 (function (factory) {
@@ -280,14 +295,14 @@ __webpack_require__(1);
 });
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 直接指向aui生成的模块
-module.exports = __webpack_require__(5);
+module.exports = __webpack_require__(6);
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 const __mod__ = {exports:{}};
@@ -363,7 +378,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 module.exports = __mod__.exports;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 (function () {

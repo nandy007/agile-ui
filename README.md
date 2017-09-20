@@ -8,7 +8,7 @@ Agile UI框架是一个基于HTML5的UI模块化框架，可以让您的UI组件
 # 用法
 
 aui用于模块化使用ui，使用前需要先创建组件原型new AuiComponent(原型)，然后在使用<aui-XXX></aui-XXX>来使用
-其中XXX为组件原型的tag属性，即标签名。
+其中AuiComponent为aui的一个类，XXX为组件原型的tag属性，即标签名。
 
 具体用法请看“使用”。
 
@@ -29,12 +29,12 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 
     <script src="./agile.ui.js" type="text/javascript"></script>
 
-引入后，window对象自动创建AuiComponent对象，如果是在amd环境的require下也会注册一个叫AuiComponent的模块
+引入后，window对象自动创建aui对象，如果是在amd环境的require下也会注册一个名为aui的模块，此模块包含一个叫AuiComponent的类
 
 第二步：使用组件前需要先创建组件，比如在amd的require中创建一个button1的组件：
 
 	// button1.js文件内容
-    define(['AuiComponent'], function(AuiComponent) {
+    define(['aui'], function(aui) {
     	'use strict';
 		// 创建一个组件原型
     	var Button = function () {
@@ -57,7 +57,7 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 		// 定义组件的样式
 	    Button.style = 'aui-button1 button{ background:#ff0000; }';
 		// 通过原型实例化组件
-	    new AuiComponent(Button);
+	    new aui.AuiComponent(Button);
 	
 	    return Button;
 	});

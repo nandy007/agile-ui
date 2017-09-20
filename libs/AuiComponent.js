@@ -2,18 +2,7 @@
 
 (function (factory) {
     const AuiComponent = factory();
-    if ((typeof module === "object" || typeof module === "function") && typeof module.exports === "object") {
-        module.exports = AuiComponent;
-    }
-    
-    if (typeof window.define === "function" && window.define.amd) {
-        window.define("AuiComponent", [], function () {
-            return AuiComponent;
-        });
-    }
-
-    if(!window.AuiComponent) window.AuiComponent = AuiComponent;
-
+    module.exports = AuiComponent;
 })(function () {
     function formateName(name) {
         if (!name) return '';
