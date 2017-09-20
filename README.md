@@ -32,6 +32,7 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 引入后，window对象自动创建AuiComponent对象，如果是在amd环境的require下也会注册一个叫AuiComponent的模块
 
 第二步：使用组件前需要先创建组件，比如在amd的require中创建一个button1的组件：
+
 	// button1.js文件内容
     define(['AuiComponent'], function(AuiComponent) {
     	'use strict';
