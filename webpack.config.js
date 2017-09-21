@@ -1,6 +1,8 @@
 const webpack = require('webpack'),
     path = require('path');
 
+const packageJSON = require('./package.json');
+
 module.exports = {
     entry: __dirname + "/main.js", //已多次提及的唯一入口文件
     output: {
@@ -31,5 +33,13 @@ module.exports = {
             'AuiComponent': path.join(__dirname, "./libs/AuiComponent.js")
         }
     },
-    plugins: []
+    plugins: [
+        (function(){
+            const arr = [];
+            arr.push('version: '+packageJSON.version);
+            arr.push('author: '+packageJSON.author);
+            arr.push("License MIT @ https://github.com/nandy007/agile-ui");
+            return new webpack.BannerPlugin(arr.join('\n'));
+        })()
+    ]
 };

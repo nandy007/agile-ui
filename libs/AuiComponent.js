@@ -68,7 +68,7 @@
         }
     };
 
-    require('./custom-elements.min');
+    require('@webcomponents/custom-elements');
 
     return AuiComponent;
 })

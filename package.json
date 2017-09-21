@@ -1,6 +1,6 @@
 {
   "name": "agile-ui",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "组件化的ui框架",
   "main": "index.js",
   "scripts": {
@@ -33,5 +33,7 @@
     "style-loader": "^0.18.2",
     "webpack": "^3.6.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.0.4"
+  }
 }
