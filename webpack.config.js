@@ -35,9 +35,9 @@ module.exports = {
     },
     plugins: [
         (function(){
-            const arr = [];
-            arr.push('version: '+packageJSON.version);
-            arr.push('author: '+packageJSON.author);
+            const arr = ['Agile UI HTML5组件化框架'];
+            arr.push('Version: '+packageJSON.version+'.'+new Date().getTime());
+            arr.push('Author: '+packageJSON.author);
             arr.push("License MIT @ https://github.com/nandy007/agile-ui");
             return new webpack.BannerPlugin(arr.join('\n'));
         })()

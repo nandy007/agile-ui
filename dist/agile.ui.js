@@ -1,6 +1,7 @@
 /*!
- * version: 0.1.7
- * author: nandy007
+ * Agile UI HTML5组件化框架
+ * Version: 0.1.9.1505975645548
+ * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
 /******/ (function(modules) { // webpackBootstrap
