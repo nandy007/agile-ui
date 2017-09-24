@@ -18,6 +18,8 @@ aui用于模块化使用ui，使用前需要先创建组件原型new AuiComponen
 
 aui本身用webpack打包可直接在页面使用script引用；也可以被agile-cli工具或者自己搭建的webpack环境下引用。
 
+需要注意的是，使用script引用时，style标签的内容将直接添加到页面中，故不支持less、sass，且import的路径请注意是相对于页面的地址；**而在webpack中使用由于使用aui-loader，style元素内可以支持less、sass以及相对路径的import写法，默认style为标准css，可以给style元素设置type为less|sass等以支持对应的语法。**
+
 
 
 ## 使用script引用
@@ -78,7 +80,43 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 ## 在agile-cli环境下使用
 
 
-正在完善中。。。
+第一步：执行如下指令，全局安装agile-cli
+
+	npm install agile-cli -g
+
+第二步：创建任意项目目录，并进入目录
+
+	mkdir myapp
+	cd myapp
+
+第三步：查看内置模板
+
+	agile-cli ls
+
+此时控制台会以name:descriptiond的形式把所有模板展示出来，如果已知要使用的模板的name则此步跳过
+
+第四步：使用模板创建项目工程
+
+	agile-cli use <name>
+
+其中name为第三步中查到的某个模板的name，这时候将使用此模板创建项目
+
+创建结束项目工程目录会有一个readme文件，请仔细阅读
+
+
+第五步：初始化工程
+	
+	npm install
+
+第六步：启动开发环境
+
+	npm run start
+
+第七步：编码，主要在app目录内完成，public目录可以操作一些静态资源
+
+第八步：打包
+	
+	npm run pack
 
 
 ## 自建webpack环境下使用
