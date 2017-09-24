@@ -28,12 +28,15 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 
 比如：
 
-
+```html
     <script src="./agile.ui.js" type="text/javascript"></script>
+```
 
 引入后，window对象自动创建aui对象，如果是在amd环境的require下也会注册一个名为aui的模块，此模块包含一个叫AuiComponent的类
 
 第二步：使用组件前需要先创建组件，比如在amd的require中创建一个button1的组件：
+
+```javascript
 
 	// button1.js文件内容
     define(['aui'], function(aui) {
@@ -64,8 +67,12 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 	    return Button;
 	});
 
+```
+
 
 第三步：在页面中使用<aui-tag></aui-tag>来引用即可
+
+```html
 
 	<!-- html页面内容 -->
     <script>
@@ -76,28 +83,46 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 		})
 	</script>
 
+```
+
 
 ## 在agile-cli环境下使用
 
 
 第一步：执行如下指令，全局安装agile-cli
 
+```bash
+
 	npm install agile-cli -g
 
+```
+
 第二步：创建任意项目目录，并进入目录
+
+```bash
 
 	mkdir myapp
 	cd myapp
 
+```
+
 第三步：查看内置模板
 
+```bash
+
 	agile-cli ls
+
+```
 
 此时控制台会以name:descriptiond的形式把所有模板展示出来，如果已知要使用的模板的name则此步跳过
 
 第四步：使用模板创建项目工程
 
+```bash
+
 	agile-cli use <name>
+
+```
 
 其中name为第三步中查到的某个模板的name，这时候将使用此模板创建项目
 
@@ -106,17 +131,29 @@ aui本身用webpack打包可直接在页面使用script引用；也可以被agil
 
 第五步：初始化工程
 	
+```bash
+
 	npm install
+
+```
 
 第六步：启动开发环境
 
+```bash
+
 	npm run start
+
+```
 
 第七步：编码，主要在app目录内完成，public目录可以操作一些静态资源
 
 第八步：打包
 	
+```bash
+
 	npm run pack
+
+```
 
 
 ## 自建webpack环境下使用
@@ -127,13 +164,18 @@ webpack环境下使用后缀为aui的文件编写组件，依赖于aui-loader
 
 第一步：进入到项目目录，然后执行cmd指令
 
+```bash
+
     npm install agile-ui --save
 
 	npm install aui-loader --save-dev
 
+```
+
 
 并且配置webpack的aui文件使用aui-loader处理，在module.rules增加如下规则：
 
+```json
 
     {
     	test: /\.aui$/,
@@ -142,14 +184,22 @@ webpack环境下使用后缀为aui的文件编写组件，依赖于aui-loader
         }
     }
 
+```
+
 
 
 第二步：在webpack.config配置的入口js中引入agile-ui，比如:
 
+```javascript
+
     require('agile-ui');
+
+```
 
 
 第三步：编写组件，创建XXX.aui文件，比如button.aui文件：
+
+```html
 
     <ui>
 	    <box class="button-out" style="flex:1;">
@@ -191,6 +241,8 @@ webpack环境下使用后缀为aui的文件编写组件，依赖于aui-loader
 	}
 	</style>
 
+```
+
 aui-loader会将文件转成js并自动调用AuiComponent来创建组件
 
 其中ui标签里的内容是模板（不包含ui标签本身），最终会作为组件的子元素。
@@ -204,12 +256,19 @@ script为模块定义，如果已经写了ui和style标签则无须设置templat
 
 第四步：引入组件，在需要的地方require进来即可，比如：
 
+```javascript
+
 	require('./app/components/button.aui');
+
+```
 
 第五步：使用组件，在页面中使用<aui-tag></aui-tag>即可使用，比如
 
+```javascript
+
 	document.querySelector('#app').innerHTML = '<aui-button>111</aui-button>';
 
+```
 
 # API说明
 
@@ -219,7 +278,11 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 
 ### 用法：
 
+```javascript
+
 	new AuiComponent(anestor);
+
+```
 
 其中anestor是一个组件原型，此原型是必须是一个具有构造函数的函数/类
 
@@ -228,6 +291,9 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 
 
 一个典型的原型定义如下：
+
+```javascript
+
 	// 定义原型
     function anestor(){
 	}
@@ -255,6 +321,7 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 	anestor.style = '';// 定义组件样式
 	anestor.observedAttributes = ['组件属性名'];// 定义监听变化的属性
 	
+```
 
 #### tag（必须）
 
