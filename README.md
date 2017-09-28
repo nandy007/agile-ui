@@ -287,7 +287,7 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 其中anestor是一个组件原型，此原型是必须是一个具有构造函数的函数/类
 
 
-原型包括静态属性tag、template和style，AuiComponent还提供created、attached、detached、attributeChanged等钩子函数
+原型包括静态属性tag、template和style，AuiComponent还提供created、attached、detached、adopted、attributeChanged等组件生命周期钩子函数
 
 
 一个典型的原型定义如下：
@@ -307,7 +307,10 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 		attached: function(){
 			// 当组件被加到dom后进入
 		},
-		detached: function(){
+		adopted: function(){
+			// 当组件从就文档移到新文档后进入
+		},
+		detached: function(oldDocument, newDocument){
 			// 当组件被dom移除后进入
 		},
 		attributeChanged: function(attrName, oldVal, newVal){
@@ -354,6 +357,10 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 #### attached
 
 当组件被加到dom后进入
+
+### adopted
+
+当组件从就文档移到新文档后进入
 
 #### detached
 
