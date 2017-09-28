@@ -72,6 +72,10 @@
             sp.disconnectedCallback = function () {
                 ielement.emit('detached', arguments);
             }
+            // 从旧文档移到新文档中
+            sp.adoptedCallback = function(){//oldDocument, newDocument
+                ielement.emit('adopted', arguments);
+            }
             // 添加，移除，或修改一个属性
             sp.attributeChangedCallback = function () {//attrName, oldVal, newVal
                 ielement.emit('attributeChanged', arguments);

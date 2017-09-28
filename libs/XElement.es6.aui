@@ -64,6 +64,10 @@
         disconnectedCallback(...args) {
             this.emit('detached', args);
         }
+        // 从旧文档移到新文档中
+        adoptedCallback(...args){//oldDocument, newDocument
+            this.emit('adopted', args);
+        }
         // 添加，移除，或修改一个属性
         attributeChangedCallback(...args) {//attrName, oldVal, newVal
             this.emit('attributeChanged', args);
