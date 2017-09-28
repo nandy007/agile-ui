@@ -21,7 +21,7 @@
         },
         emit: function (funcName, args, cb) {
             const component = this.$el.component, func = component[funcName];
-            if (!func) return;
+            if (!func) return cb && cb();
             setTimeout(function () {
                 cb && cb();
                 func.apply(component, args);
