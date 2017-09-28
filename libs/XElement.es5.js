@@ -21,10 +21,10 @@
         },
         emit: function (funcName, args, cb) {
             const component = this.$el.component, func = component[funcName];
-            if (!func) return cb && cb();
+            if(!(cb||func)) return;
             setTimeout(function () {
                 cb && cb();
-                func.apply(component, args);
+                func && func.apply(component, args);
             }, 1);
         },
         createdCallback: function () {
