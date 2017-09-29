@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.1.9.1505975645548
+ * Version: 0.2.3.1506676125234
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -232,10 +232,10 @@ __webpack_require__(1);
         emit: function (funcName, args, cb) {
             const component = this.$el.component,
                   func = component[funcName];
-            if (!func) return;
+            if (!(cb || func)) return;
             setTimeout(function () {
                 cb && cb();
-                func.apply(component, args);
+                func && func.apply(component, args);
             }, 1);
         },
         createdCallback: function () {
@@ -282,6 +282,11 @@ __webpack_require__(1);
             // 从文档中移除实例
             sp.disconnectedCallback = function () {
                 ielement.emit('detached', arguments);
+            };
+            // 从旧文档移到新文档中
+            sp.adoptedCallback = function () {
+                //oldDocument, newDocument
+                ielement.emit('adopted', arguments);
             };
             // 添加，移除，或修改一个属性
             sp.attributeChangedCallback = function () {
@@ -332,10 +337,10 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        }',
 '        emit(funcName, args, cb) {',
 '            const component = this.component, func = component[funcName];',
-'            if (!func) return;',
+'            if(!(cb||func)) return;',
 '            setTimeout(function () {',
 '                cb && cb();',
-'                func.apply(component, args);',
+'                func && func.apply(component, args);',
 '            }, 1);',
 '        }',
 '        // 创建元素实例',
@@ -363,6 +368,10 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        // 从文档中移除实例',
 '        disconnectedCallback(...args) {',
 '            this.emit(\'detached\', args);',
+'        }',
+'        // 从旧文档移到新文档中',
+'        adoptedCallback(...args){//oldDocument, newDocument',
+'            this.emit(\'adopted\', args);',
 '        }',
 '        // 添加，移除，或修改一个属性',
 '        attributeChangedCallback(...args) {//attrName, oldVal, newVal',
