@@ -308,7 +308,7 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 			// 当组件被加到dom后进入
 		},
 		adopted: function(){
-			// 当组件从就文档移到新文档后进入
+			// 当组件从旧文档移到新文档后进入
 		},
 		detached: function(oldDocument, newDocument){
 			// 当组件被dom移除后进入
@@ -358,9 +358,9 @@ AuiComponent是aui框架的核心类，用于创建aui组件。
 
 当组件被加到dom后进入
 
-### adopted
+#### adopted
 
-当组件从就文档移到新文档后进入
+当组件从旧文档移到新文档后进入
 
 #### detached
 
