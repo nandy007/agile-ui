@@ -7,7 +7,8 @@
     const modName = window.__AGILE_UI_ID__ || 'aui';
 
     if (typeof window.define === "function" && window.define.amd) {
-        window.define(modName, [], function () {
+        //window.define(modName, [], function () {
+        window.define([], function () {
             return aui;
         });
     }
