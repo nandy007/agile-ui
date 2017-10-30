@@ -26,11 +26,21 @@
     }
 
     AuiComponent.create = function (anestor) {
-        const aui = new AuiComponent(anestor);
+        var aui = new AuiComponent(anestor);
         return aui.isCreated;
     };
 
     AuiComponent.isEs5 = !window.customElements ? true : false;
+
+    AuiComponent.cssPretreatment = {
+        text: function(content, cb){
+            cb(content);
+        }
+    };
+
+    AuiComponent.addCssPretreatment = function(k, func){
+        AuiComponent.cssPretreatment[k] = func;
+    };
 
     AuiComponent.prototype = {
         get tag() {
@@ -42,22 +52,30 @@
         },
 
         addStyle: function () {
-            const style = this.$anestor.style;
+            var style = this.$anestor.style;
             if (!style) return;
+            var type, content = style, cssPretreatment;
+            if(typeof style==='object'){
+                type = style.type;
+                content = style.content || '';
+            }
+            cssPretreatment = AuiComponent.cssPretreatment[type] || AuiComponent.cssPretreatment['text'];
 
-            const $style = document.createElement('style');
-            $style.type = 'text/css';
-            $style.innerHTML = style;
-            document.getElementsByTagName('HEAD').item(0).appendChild($style);
+            cssPretreatment.call(this, content, function(css){
+                var $style = document.createElement('style');
+                $style.type = 'text/css';
+                $style.innerHTML = css;
+                document.getElementsByTagName('HEAD').item(0).appendChild($style);
+            });
         },
 
         bind: function () {
 
             if (!this.tag || this.isCreated) return;
 
-            const anestor = this.$anestor;
+            var anestor = this.$anestor;
 
-            const XElement = require('./XElement')(AuiComponent.isEs5)(anestor);
+            var XElement = require('./XElement')(AuiComponent.isEs5)(anestor);
 
             // 如果组件已经被定义则不重复定义
             if (customElements.get(this.tag)) return;
