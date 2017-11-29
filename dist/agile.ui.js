@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.2.5.1509348503066
+ * Version: 0.2.6.1511919741788
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -130,6 +130,8 @@ __webpack_require__(1);
         this.addStyle();
 
         this.bind();
+
+        this.hookGlobal();
     }
 
     AuiComponent.create = function (anestor) {
@@ -150,6 +152,19 @@ __webpack_require__(1);
     };
 
     AuiComponent.prototype = {
+        createName: function () {
+            // 把所有-字母转为字母大写
+            return this.tag.replace('aui', '').replace(/\-(.)/g, function (s, s1) {
+                return s1.toUpperCase();
+            });
+        },
+        hookGlobal: function () {
+            if (typeof window === 'object') {
+                if (!window.auicomponents) window.auicomponents = {};
+                var name = this.createName();
+                auicomponents[name] = this.$anestor;
+            }
+        },
         get tag() {
             return this._tag;
         },

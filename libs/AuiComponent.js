@@ -23,6 +23,8 @@
         this.addStyle();
 
         this.bind();
+
+        this.hookGlobal();
     }
 
     AuiComponent.create = function (anestor) {
@@ -43,6 +45,19 @@
     };
 
     AuiComponent.prototype = {
+        createName: function(){
+            // 把所有-字母转为字母大写
+            return this.tag.replace('aui', '').replace(/\-(.)/g, function(s,s1){
+                return s1.toUpperCase();
+            });
+        },
+        hookGlobal: function(){
+            if(typeof window==='object'){
+                if(!window.auicomponents) window.auicomponents = {};
+                var name = this.createName();
+                auicomponents[name] = this.$anestor;
+            }
+        },
         get tag() {
             return this._tag;
         },
