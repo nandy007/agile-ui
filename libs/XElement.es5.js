@@ -22,10 +22,17 @@
         emit: function (funcName, args, cb) {
             const component = this.$el.component, func = component[funcName];
             if(!(cb||func)) return;
-            setTimeout(function () {
+            var _func = function () {
                 cb && cb();
                 func && func.apply(component, args);
-            }, 1);
+            };
+
+            if(funcName==='created'){
+                setTimeout(_func, 1);
+            }else{
+                _func();
+            }
+            
         },
         createdCallback: function () {
             const _this = this.$el;

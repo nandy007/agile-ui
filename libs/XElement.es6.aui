@@ -26,10 +26,16 @@
         emit(funcName, args, cb) {
             const component = this.component, func = component[funcName];
             if(!(cb||func)) return;
-            setTimeout(function () {
+            var _func = function () {
                 cb && cb();
                 func && func.apply(component, args);
-            }, 1);
+            };
+
+            if(funcName==='created'){
+                setTimeout(_func, 1);
+            }else{
+                _func();
+            };
         }
 
         // 创建元素实例
