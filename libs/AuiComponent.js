@@ -16,7 +16,7 @@
     function AuiComponent(anestor) {
         this.isCreated = false;
 
-        this.tag = anestor.tag;
+        this.setTag(anestor.tag);
 
         this.$anestor = anestor;
 
@@ -47,7 +47,7 @@
     AuiComponent.prototype = {
         createName: function(){
             // 把所有-字母转为字母大写
-            return this.tag.replace('aui', '').replace(/\-(.)/g, function(s,s1){
+            return this.getTag().replace('aui', '').replace(/\-(.)/g, function(s,s1){
                 return s1.toUpperCase();
             });
         },
@@ -58,11 +58,10 @@
                 auicomponents[name] = this.$anestor;
             }
         },
-        get tag() {
+        getTag: function(){
             return this._tag;
         },
-
-        set tag(name) {
+        setTag: function(name){
             this._tag = formateName(name);
         },
 
@@ -86,16 +85,18 @@
 
         bind: function () {
 
-            if (!this.tag || this.isCreated) return;
+            var tag = this.getTag();
+
+            if (!tag || this.isCreated) return;
 
             var anestor = this.$anestor;
 
             var XElement = require('./XElement')(AuiComponent.isEs5)(anestor);
 
             // 如果组件已经被定义则不重复定义
-            if (customElements.get(this.tag)) return;
+            if (customElements.get(tag)) return;
             // 否则定义组件
-            customElements.define(this.tag, XElement);
+            customElements.define(tag, XElement);
 
             this.isCreated = true;
         }

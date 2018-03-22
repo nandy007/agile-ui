@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.2.7.1518183874156
+ * Version: 0.2.8.1521723257661
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -123,7 +123,7 @@ __webpack_require__(1);
     function AuiComponent(anestor) {
         this.isCreated = false;
 
-        this.tag = anestor.tag;
+        this.setTag(anestor.tag);
 
         this.$anestor = anestor;
 
@@ -154,7 +154,7 @@ __webpack_require__(1);
     AuiComponent.prototype = {
         createName: function () {
             // 把所有-字母转为字母大写
-            return this.tag.replace('aui', '').replace(/\-(.)/g, function (s, s1) {
+            return this.getTag().replace('aui', '').replace(/\-(.)/g, function (s, s1) {
                 return s1.toUpperCase();
             });
         },
@@ -165,11 +165,10 @@ __webpack_require__(1);
                 auicomponents[name] = this.$anestor;
             }
         },
-        get tag() {
+        getTag: function () {
             return this._tag;
         },
-
-        set tag(name) {
+        setTag: function (name) {
             this._tag = formateName(name);
         },
 
@@ -195,16 +194,18 @@ __webpack_require__(1);
 
         bind: function () {
 
-            if (!this.tag || this.isCreated) return;
+            var tag = this.getTag();
+
+            if (!tag || this.isCreated) return;
 
             var anestor = this.$anestor;
 
             var XElement = __webpack_require__(3)(AuiComponent.isEs5)(anestor);
 
             // 如果组件已经被定义则不重复定义
-            if (customElements.get(this.tag)) return;
+            if (customElements.get(tag)) return;
             // 否则定义组件
-            customElements.define(this.tag, XElement);
+            customElements.define(tag, XElement);
 
             this.isCreated = true;
         }
