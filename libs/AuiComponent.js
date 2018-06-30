@@ -27,7 +27,9 @@
         this.hookGlobal();
     }
 
-    AuiComponent.create = function (anestor) {
+    AuiComponent.create = function (anestor, template) {
+        if(!anestor.tag) anestor.tag = anestor.name;
+        if(!anestor.template) anestor.template = template || '';
         var aui = new AuiComponent(anestor);
         return aui.isCreated;
     };
