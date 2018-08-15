@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.0.1530342917755
+ * Version: 0.3.1.1534320758623
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -79,23 +79,26 @@ __webpack_require__(1);
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-(function (factory) {
+!function (factory) {
     const aui = factory();
     if ((typeof module === "object" || typeof module === "function") && typeof module.exports === "object") {
         module.exports = aui;
     }
 
-    const modName = window.__AGILE_UI_ID__ || 'aui';
+    const modName = window.__AGILE_UI_NAME__;
+    const modId = window.__AGILE_UI_ID__ || 'aui';
 
     if (typeof window.define === "function" && window.define.amd) {
         //window.define(modName, [], function () {
-        window.define([], function () {
+        const params = [function () {
             return aui;
-        });
+        }];
+        if (modName) params.unshift(modName);
+        window.define.apply(window.define, params);
     }
 
-    if (!window[modName]) window[modName] = aui;
-})(function () {
+    if (!window[modId]) window[modId] = aui;
+}(function () {
     return {
         'AuiComponent': __webpack_require__(2)
     };
