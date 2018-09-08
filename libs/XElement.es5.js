@@ -68,7 +68,7 @@
                 }
 
                 return SimpleElement;
-            }(HTMLElement);
+            }(ielement.$anestor.extendElement || HTMLElement);
 
             const sp = SimpleElement.prototype;
 
@@ -98,6 +98,6 @@
         XElement.observedAttributes = anestor.observedAttributes || [];
         return XElement;
     };
-})
+});
 
 

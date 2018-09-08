@@ -22,12 +22,18 @@
 
         this.addStyle();
 
+        this.initExtendElement();
+
         this.bind();
 
         this.hookGlobal();
     }
 
     AuiComponent.create = function (anestor, template) {
+        var useOld = typeof anestor.useOld==='undefined'?AuiComponent.useOld:anestor.useOld;
+        if(useOld){
+            return require('./AuiComponent.old').create(anestor, template);
+        }
         if(!anestor.tag) anestor.tag = anestor.name;
         if(!anestor.template) anestor.template = template || '';
         var aui = new AuiComponent(anestor);
@@ -35,6 +41,7 @@
     };
 
     AuiComponent.isEs5 = !window.customElements ? true : false;
+    AuiComponent.useOld = false;
 
     AuiComponent.cssPretreatment = {
         text: function(content, cb){
@@ -85,6 +92,21 @@
             });
         },
 
+        initExtendElement: function(){
+            var anestor = this.$anestor;
+            var extendElement = anestor.extendElement, extendTag;
+            if(typeof extendElement==='string'){
+                extendTag = extendElement;
+                let ele = document.createElement(extendTag);
+                anestor.extendElement = (new Function(`return ${ele.constructor.name};`))();
+                ele = null;
+            }else if(!extendElement){
+                anestor.extendElement = HTMLElement;
+            }
+
+            this.extendTag = extendTag;
+        },
+
         bind: function () {
 
             var tag = this.getTag();
@@ -98,7 +120,7 @@
             // 如果组件已经被定义则不重复定义
             if (customElements.get(tag)) return;
             // 否则定义组件
-            customElements.define(tag, XElement);
+            customElements.define(tag, XElement, {extends: this.extendTag});
 
             this.isCreated = true;
         }
@@ -107,4 +129,4 @@
     require('@webcomponents/custom-elements');
 
     return AuiComponent;
-})
+});

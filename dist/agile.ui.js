@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.3.1536377477232
+ * Version: 0.3.4.1536405057811
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -132,12 +132,18 @@ __webpack_require__(1);
 
         this.addStyle();
 
+        this.initExtendElement();
+
         this.bind();
 
         this.hookGlobal();
     }
 
     AuiComponent.create = function (anestor, template) {
+        var useOld = typeof anestor.useOld === 'undefined' ? AuiComponent.useOld : anestor.useOld;
+        if (useOld) {
+            return __webpack_require__(3).create(anestor, template);
+        }
         if (!anestor.tag) anestor.tag = anestor.name;
         if (!anestor.template) anestor.template = template || '';
         var aui = new AuiComponent(anestor);
@@ -145,6 +151,7 @@ __webpack_require__(1);
     };
 
     AuiComponent.isEs5 = !window.customElements ? true : false;
+    AuiComponent.useOld = false;
 
     AuiComponent.cssPretreatment = {
         text: function (content, cb) {
@@ -197,6 +204,22 @@ __webpack_require__(1);
             });
         },
 
+        initExtendElement: function () {
+            var anestor = this.$anestor;
+            var extendElement = anestor.extendElement,
+                extendTag;
+            if (typeof extendElement === 'string') {
+                extendTag = extendElement;
+                let ele = document.createElement(extendTag);
+                anestor.extendElement = new Function(`return ${ele.constructor.name};`)();
+                ele = null;
+            } else if (!extendElement) {
+                anestor.extendElement = HTMLElement;
+            }
+
+            this.extendTag = extendTag;
+        },
+
         bind: function () {
 
             var tag = this.getTag();
@@ -205,24 +228,147 @@ __webpack_require__(1);
 
             var anestor = this.$anestor;
 
-            var XElement = __webpack_require__(3)(AuiComponent.isEs5)(anestor);
+            var XElement = __webpack_require__(4)(AuiComponent.isEs5)(anestor);
 
             // 如果组件已经被定义则不重复定义
             if (customElements.get(tag)) return;
             // 否则定义组件
-            customElements.define(tag, XElement);
+            customElements.define(tag, XElement, { extends: this.extendTag });
 
             this.isCreated = true;
         }
     };
 
-    __webpack_require__(7);
+    __webpack_require__(8);
 
     return AuiComponent;
 });
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+
+
+(function (factory) {
+    const AuiComponent = factory();
+    module.exports = AuiComponent;
+})(function () {
+    function formateName(name) {
+        if (!name) return '';
+        name = name.toLowerCase();
+        if (name.indexOf('aui-') === 0) {
+            return name;
+        }
+        return 'aui-' + name;
+    }
+
+    function createElement(anestor) {
+        var tagName = formateName(anestor.tag);
+        var extendElement = anestor.extendElement,
+            extendTag;
+        if (typeof extendElement === 'string') {
+            extendTag = extendElement;
+            let ele = document.createElement(extendTag);
+            anestor.extendElement = new Function(`return ${ele.constructor.name};`)();
+            ele = null;
+        } else if (!extendElement) {
+            anestor.extendElement = HTMLElement;
+        }
+
+        var pp = Object.create(anestor.extendElement.prototype);
+        pp.$anestor = anestor;
+        pp.bindModule = function () {
+            const Component = this.$anestor;
+
+            const component = this.component = typeof Component === 'function' ? new Component(this) : {};
+
+            component.template = Component.template || '';
+            component.$el = this;
+
+            // this.createdCallback();
+        };
+        pp.emit = function (funcName, args, cb, isAsync) {
+            const component = this.component,
+                  func = component[funcName];
+            if (!(cb || func)) return;
+            var _func = function () {
+                cb && cb();
+                func && func.apply(component, args);
+            };
+
+            if (isAsync) {
+                setTimeout(_func, 1);
+            } else {
+                _func();
+            };
+        };
+
+        // 创建元素实例
+        pp.createdCallback = function (...args) {
+            this.bindModule();
+            const _this = this;
+            const template = _this.component.template,
+                  createdSync = _this.component.createdSync;
+            const isAsync = typeof createdSync === 'undefined' ? true : !createdSync;
+            this.emit('created', args, function () {
+
+                if (template) {
+
+                    const $fragment = document.createDocumentFragment();
+                    Array.from(_this.childNodes).forEach(function ($child) {
+                        $fragment.appendChild($child);
+                    });
+
+                    _this.innerHTML = template;
+                    const $child = _this.querySelector('child');
+                    if ($child) {
+                        $child.parentNode.replaceChild($fragment, $child);
+                    }
+                }
+            }, isAsync);
+        };
+
+        // 向文档插入实例
+        pp.connectedCallback = function (...args) {
+            this.emit('attached', args);
+        };
+        // 从文档中移除实例
+        pp.disconnectedCallback = function (...args) {
+            this.emit('detached', args);
+        };
+        // 从旧文档移到新文档中
+        pp.adoptedCallback = function (...args) {
+            //oldDocument, newDocument
+            this.emit('adopted', args);
+        };
+        // 添加，移除，或修改一个属性
+        pp.attributeChangedCallback = function (...args) {
+            //attrName, oldVal, newVal
+            this.emit('attributeChanged', args);
+        };
+
+        document.registerElement(tagName, { prototype: pp, extends: extendTag });
+
+        return {
+            isCreated: true
+        };
+    }
+
+    var AuiComponent = {
+        create: function (anestor, template) {
+            if (!anestor.tag) anestor.tag = anestor.name;
+            if (!anestor.template) anestor.template = template || '';
+            var aui = createElement(anestor);
+            return aui.isCreated;
+        }
+    };
+
+    return AuiComponent;
+});
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (factory) {
@@ -230,12 +376,12 @@ __webpack_require__(1);
     module.exports = XElement;
 })(function () {
     return function (isEs5) {
-        return isEs5 ? __webpack_require__(4) : __webpack_require__(5);
+        return isEs5 ? __webpack_require__(5) : __webpack_require__(6);
     };
 });
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 (function (factory) {
@@ -321,7 +467,7 @@ __webpack_require__(1);
                 }
 
                 return SimpleElement;
-            }(HTMLElement);
+            }(ielement.$anestor.extendElement || HTMLElement);
 
             const sp = SimpleElement.prototype;
 
@@ -356,14 +502,14 @@ __webpack_require__(1);
 });
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 直接指向aui生成的模块
-module.exports = __webpack_require__(6);
+module.exports = __webpack_require__(7);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 const __mod__ = {exports:{}};
@@ -372,70 +518,73 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '    const XElement = factory();',
 '    module.exports = XElement;',
 '})(function () {',
-'    class IElement extends HTMLElement {',
-'        constructor() {',
-'            super();',
-'            this.component = {};',
-'            this.bindModule();',
-'        }',
-'        bindModule() {',
-'            const Component = this.$anestor;',
-'            const component = this.component = typeof Component === \'function\' ? new Component(this) : {};',
-'            component.template = Component.template || \'\';',
-'            component.$el = this;',
-'            this.createdCallback();',
-'        }',
-'        emit(funcName, args, cb, isAsync) {',
-'            const component = this.component, func = component[funcName];',
-'            if(!(cb||func)) return;',
-'            var _func = function () {',
-'                cb && cb();',
-'                func && func.apply(component, args);',
-'            };',
-'            if(isAsync){',
-'                setTimeout(_func, 1);',
-'            }else{',
-'                _func();',
-'            };',
-'        }',
-'        // 创建元素实例',
-'        createdCallback(...args) {',
-'           ',
-'            const _this = this;',
-'            const template = _this.component.template, createdSync = _this.component.createdSync;',
-'            const isAsync = typeof createdSync===\'undefined\'?true:!createdSync;',
-'            this.emit(\'created\', args, function () {',
-'                if (template) {',
-'                    const $fragment = document.createDocumentFragment();',
-'                    Array.from(_this.childNodes).forEach(function ($child) {',
-'                        $fragment.appendChild($child);',
-'                    });',
-'                    _this.innerHTML = template;',
-'                    const $child = _this.querySelector(\'child\');',
-'                    if ($child) {',
-'                        $child.parentNode.replaceChild($fragment, $child);',
+'    function createElement(_HTMLElement){',
+'        return class IElement extends _HTMLElement {',
+'            constructor() {',
+'                super();',
+'                ',
+'            }',
+'            bindModule() {',
+'                if(this.component) return;',
+'                const Component = this.$anestor;',
+'                const component = this.component = typeof Component === \'function\' ? new Component(this) : {};',
+'                component.template = Component.template || \'\';',
+'                component.$el = this;',
+'                this.createdCallback();',
+'            }',
+'            emit(funcName, args, cb, isAsync) {',
+'                this.bindModule();',
+'                const component = this.component, func = component[funcName];',
+'                if(!(cb||func)) return;',
+'                var _func = function () {',
+'                    cb && cb();',
+'                    func && func.apply(component, args);',
+'                };',
+'                if(isAsync){',
+'                    setTimeout(_func, 1);',
+'                }else{',
+'                    _func();',
+'                };',
+'            }',
+'            // 创建元素实例',
+'            createdCallback(...args) {',
+'                const _this = this;',
+'                const template = _this.component.template, createdSync = _this.component.createdSync;',
+'                const isAsync = typeof createdSync===\'undefined\'?true:!createdSync;',
+'                this.emit(\'created\', args, function () {',
+'                    if (template) {',
+'                        const $fragment = document.createDocumentFragment();',
+'                        Array.from(_this.childNodes).forEach(function ($child) {',
+'                            $fragment.appendChild($child);',
+'                        });',
+'                        _this.innerHTML = template;',
+'                        const $child = _this.querySelector(\'child\');',
+'                        if ($child) {',
+'                            $child.parentNode.replaceChild($fragment, $child);',
+'                        }',
 '                    }',
-'                }',
-'            }, isAsync);',
-'        }',
-'        // 向文档插入实例',
-'        connectedCallback(...args) {',
-'            this.emit(\'attached\', args);',
-'        }',
-'        // 从文档中移除实例',
-'        disconnectedCallback(...args) {',
-'            this.emit(\'detached\', args);',
-'        }',
-'        // 从旧文档移到新文档中',
-'        adoptedCallback(...args){//oldDocument, newDocument',
-'            this.emit(\'adopted\', args);',
-'        }',
-'        // 添加，移除，或修改一个属性',
-'        attributeChangedCallback(...args) {//attrName, oldVal, newVal',
-'            this.emit(\'attributeChanged\', args);',
-'        }',
+'                }, isAsync);',
+'            }',
+'            // 向文档插入实例',
+'            connectedCallback(...args) {',
+'                this.emit(\'attached\', args);',
+'            }',
+'            // 从文档中移除实例',
+'            disconnectedCallback(...args) {',
+'                this.emit(\'detached\', args);',
+'            }',
+'            // 从旧文档移到新文档中',
+'            adoptedCallback(...args){//oldDocument, newDocument',
+'                this.emit(\'adopted\', args);',
+'            }',
+'            // 添加，移除，或修改一个属性',
+'            attributeChangedCallback(...args) {//attrName, oldVal, newVal',
+'                this.emit(\'attributeChanged\', args);',
+'            }',
+'        };',
 '    }',
 '    return function (anestor) {',
+'        const IElement = createElement(anestor.extendElement || HTMLElement);',
 '        class XElement extends IElement {',
 '            get $anestor() {',
 '                return anestor;',
@@ -444,12 +593,12 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        }',
 '        return XElement;',
 '    };',
-'})'].join("\n");;
+'});'].join("\n");;
 (new Function("module", __str__))(__mod__);
 module.exports = __mod__.exports;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 (function(){

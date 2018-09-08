@@ -5,85 +5,88 @@
     module.exports = XElement;
 })(function () {
 
-    class IElement extends HTMLElement {
-        constructor() {
-            super();
-            this.component = {};
-            this.bindModule();
-        }
+    function createElement(_HTMLElement){
+        return class IElement extends _HTMLElement {
+            constructor() {
+                super();
+                
+            }
 
-        bindModule() {
-            const Component = this.$anestor;
+            bindModule() {
+                if(this.component) return;
+                const Component = this.$anestor;
 
-            const component = this.component = typeof Component === 'function' ? new Component(this) : {};
+                const component = this.component = typeof Component === 'function' ? new Component(this) : {};
 
-            component.template = Component.template || '';
-            component.$el = this;
+                component.template = Component.template || '';
+                component.$el = this;
 
-            this.createdCallback();
-        }
+                this.createdCallback();
+            }
 
-        emit(funcName, args, cb, isAsync) {
-            const component = this.component, func = component[funcName];
-            if(!(cb||func)) return;
-            var _func = function () {
-                cb && cb();
-                func && func.apply(component, args);
-            };
+            emit(funcName, args, cb, isAsync) {
+                this.bindModule();
+                const component = this.component, func = component[funcName];
+                if(!(cb||func)) return;
+                var _func = function () {
+                    cb && cb();
+                    func && func.apply(component, args);
+                };
 
-            if(isAsync){
-                setTimeout(_func, 1);
-            }else{
-                _func();
-            };
-        }
+                if(isAsync){
+                    setTimeout(_func, 1);
+                }else{
+                    _func();
+                };
+            }
 
-        // 创建元素实例
-        createdCallback(...args) {
-           
-            const _this = this;
-            const template = _this.component.template, createdSync = _this.component.createdSync;
-            const isAsync = typeof createdSync==='undefined'?true:!createdSync;
-            this.emit('created', args, function () {
+            // 创建元素实例
+            createdCallback(...args) {
+                const _this = this;
+                const template = _this.component.template, createdSync = _this.component.createdSync;
+                const isAsync = typeof createdSync==='undefined'?true:!createdSync;
+                this.emit('created', args, function () {
 
-                if (template) {
+                    if (template) {
 
-                    const $fragment = document.createDocumentFragment();
-                    Array.from(_this.childNodes).forEach(function ($child) {
-                        $fragment.appendChild($child);
-                    });
+                        const $fragment = document.createDocumentFragment();
+                        Array.from(_this.childNodes).forEach(function ($child) {
+                            $fragment.appendChild($child);
+                        });
 
-                    _this.innerHTML = template;
-                    const $child = _this.querySelector('child');
-                    if ($child) {
-                        $child.parentNode.replaceChild($fragment, $child);
+                        _this.innerHTML = template;
+                        const $child = _this.querySelector('child');
+                        if ($child) {
+                            $child.parentNode.replaceChild($fragment, $child);
+                        }
                     }
-                }
 
-            }, isAsync);
-        }
+                }, isAsync);
+            }
 
-        // 向文档插入实例
-        connectedCallback(...args) {
-            this.emit('attached', args);
-        }
-        // 从文档中移除实例
-        disconnectedCallback(...args) {
-            this.emit('detached', args);
-        }
-        // 从旧文档移到新文档中
-        adoptedCallback(...args){//oldDocument, newDocument
-            this.emit('adopted', args);
-        }
-        // 添加，移除，或修改一个属性
-        attributeChangedCallback(...args) {//attrName, oldVal, newVal
-            this.emit('attributeChanged', args);
-        }
+            // 向文档插入实例
+            connectedCallback(...args) {
+                this.emit('attached', args);
+            }
+            // 从文档中移除实例
+            disconnectedCallback(...args) {
+                this.emit('detached', args);
+            }
+            // 从旧文档移到新文档中
+            adoptedCallback(...args){//oldDocument, newDocument
+                this.emit('adopted', args);
+            }
+            // 添加，移除，或修改一个属性
+            attributeChangedCallback(...args) {//attrName, oldVal, newVal
+                this.emit('attributeChanged', args);
+            }
+        };
     }
 
 
 
     return function (anestor) {
+        const IElement = createElement(anestor.extendElement || HTMLElement);
         class XElement extends IElement {
             get $anestor() {
                 return anestor;
@@ -95,5 +98,5 @@
         return XElement;
     };
 
-})
+});
 </script>
