@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.2.1536373194818
+ * Version: 0.3.3.1536377477232
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -271,7 +271,7 @@ __webpack_require__(1);
             this.$el = component.$el = $el;
             this.createdCallback();
         },
-        emit: function (funcName, args, cb) {
+        emit: function (funcName, args, cb, isAsync) {
             const component = this.$el.component,
                   func = component[funcName];
             if (!(cb || func)) return;
@@ -280,7 +280,7 @@ __webpack_require__(1);
                 func && func.apply(component, args);
             };
 
-            if (funcName === 'created') {
+            if (isAsync) {
                 setTimeout(_func, 1);
             } else {
                 _func();
@@ -288,8 +288,10 @@ __webpack_require__(1);
         },
         createdCallback: function () {
             const _this = this.$el;
+            const template = _this.component.template,
+                  createdSync = _this.component.createdSync;
+            const isAsync = typeof createdSync === 'undefined' ? true : !createdSync;
             this.emit('created', arguments, function () {
-                const template = _this.component.template;
                 if (template) {
                     const $fragment = document.createDocumentFragment();
                     Array.prototype.slice.call(_this.childNodes, 0).forEach(function ($child) {
@@ -301,7 +303,7 @@ __webpack_require__(1);
                         $child.parentNode.replaceChild($fragment, $child);
                     }
                 }
-            });
+            }, isAsync);
         },
         create: function () {
             var ielement = this;
@@ -383,14 +385,14 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '            component.$el = this;',
 '            this.createdCallback();',
 '        }',
-'        emit(funcName, args, cb) {',
+'        emit(funcName, args, cb, isAsync) {',
 '            const component = this.component, func = component[funcName];',
 '            if(!(cb||func)) return;',
 '            var _func = function () {',
 '                cb && cb();',
 '                func && func.apply(component, args);',
 '            };',
-'            if(funcName===\'created\'){',
+'            if(isAsync){',
 '                setTimeout(_func, 1);',
 '            }else{',
 '                _func();',
@@ -398,9 +400,11 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        }',
 '        // 创建元素实例',
 '        createdCallback(...args) {',
+'           ',
 '            const _this = this;',
+'            const template = _this.component.template, createdSync = _this.component.createdSync;',
+'            const isAsync = typeof createdSync===\'undefined\'?true:!createdSync;',
 '            this.emit(\'created\', args, function () {',
-'                const template = _this.component.template;',
 '                if (template) {',
 '                    const $fragment = document.createDocumentFragment();',
 '                    Array.from(_this.childNodes).forEach(function ($child) {',
@@ -412,7 +416,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '                        $child.parentNode.replaceChild($fragment, $child);',
 '                    }',
 '                }',
-'            });',
+'            }, isAsync);',
 '        }',
 '        // 向文档插入实例',
 '        connectedCallback(...args) {',

@@ -19,7 +19,7 @@
             this.$el = component.$el = $el;
             this.createdCallback();
         },
-        emit: function (funcName, args, cb) {
+        emit: function (funcName, args, cb, isAsync) {
             const component = this.$el.component, func = component[funcName];
             if(!(cb||func)) return;
             var _func = function () {
@@ -27,7 +27,7 @@
                 func && func.apply(component, args);
             };
 
-            if(funcName==='created'){
+            if(isAsync){
                 setTimeout(_func, 1);
             }else{
                 _func();
@@ -36,8 +36,9 @@
         },
         createdCallback: function () {
             const _this = this.$el;
+            const template = _this.component.template, createdSync = _this.component.createdSync;
+            const isAsync = typeof createdSync==='undefined'?true:!createdSync;
             this.emit('created', arguments, function () {
-                const template = _this.component.template;
                 if (template) {
                     const $fragment = document.createDocumentFragment();
                     Array.prototype.slice.call(_this.childNodes, 0).forEach(function ($child) {
@@ -49,7 +50,7 @@
                         $child.parentNode.replaceChild($fragment, $child);
                     }
                 }
-            });
+            }, isAsync);
         },
         create: function () {
             var ielement = this;
