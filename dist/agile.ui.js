@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.1.1534320758623
+ * Version: 0.3.2.1536373194818
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -266,7 +266,7 @@ __webpack_require__(1);
     IElement.prototype = {
         bindModule: function ($el) {
             const Component = this.$anestor;
-            const component = $el.component = typeof Component === 'function' ? new Component() : {};
+            const component = $el.component = typeof Component === 'function' ? new Component($el) : {};
             component.template = Component.template || '';
             this.$el = component.$el = $el;
             this.createdCallback();
@@ -378,7 +378,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        }',
 '        bindModule() {',
 '            const Component = this.$anestor;',
-'            const component = this.component = typeof Component === \'function\' ? new Component() : {};',
+'            const component = this.component = typeof Component === \'function\' ? new Component(this) : {};',
 '            component.template = Component.template || \'\';',
 '            component.$el = this;',
 '            this.createdCallback();',

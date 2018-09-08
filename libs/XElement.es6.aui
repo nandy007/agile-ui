@@ -15,7 +15,7 @@
         bindModule() {
             const Component = this.$anestor;
 
-            const component = this.component = typeof Component === 'function' ? new Component() : {};
+            const component = this.component = typeof Component === 'function' ? new Component(this) : {};
 
             component.template = Component.template || '';
             component.$el = this;

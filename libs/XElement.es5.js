@@ -14,7 +14,7 @@
     IElement.prototype = {
         bindModule: function ($el) {
             const Component = this.$anestor;
-            const component = $el.component = typeof Component === 'function' ? new Component() : {};
+            const component = $el.component = typeof Component === 'function' ? new Component($el) : {};
             component.template = Component.template || '';
             this.$el = component.$el = $el;
             this.createdCallback();
