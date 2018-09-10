@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.4.1536405057811
+ * Version: 0.3.5.1536558586220
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -217,6 +217,10 @@ __webpack_require__(1);
                 anestor.extendElement = HTMLElement;
             }
 
+            if (!extendTag) {
+                extendTag = anestor.extendElement.tag;
+            }
+
             this.extendTag = extendTag;
         },
 
@@ -276,6 +280,10 @@ __webpack_require__(1);
             anestor.extendElement = HTMLElement;
         }
 
+        if (!extendTag) {
+            extendTag = anestor.extendElement.tag;
+        }
+
         var pp = Object.create(anestor.extendElement.prototype);
         pp.$anestor = anestor;
         pp.bindModule = function () {
@@ -330,18 +338,17 @@ __webpack_require__(1);
         };
 
         // 向文档插入实例
-        pp.connectedCallback = function (...args) {
+        pp.attachedCallback = function (...args) {
             this.emit('attached', args);
         };
         // 从文档中移除实例
-        pp.disconnectedCallback = function (...args) {
+        pp.detachedCallback = function (...args) {
             this.emit('detached', args);
         };
         // 从旧文档移到新文档中
-        pp.adoptedCallback = function (...args) {
-            //oldDocument, newDocument
-            this.emit('adopted', args);
-        };
+        // pp.adoptedCallback = function(...args){//oldDocument, newDocument
+        //     this.emit('adopted', args);
+        // };
         // 添加，移除，或修改一个属性
         pp.attributeChangedCallback = function (...args) {
             //attrName, oldVal, newVal

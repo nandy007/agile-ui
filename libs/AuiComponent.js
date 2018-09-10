@@ -103,6 +103,10 @@
             }else if(!extendElement){
                 anestor.extendElement = HTMLElement;
             }
+            
+            if(!extendTag){
+                extendTag = anestor.extendElement.tag;
+            }
 
             this.extendTag = extendTag;
         },
