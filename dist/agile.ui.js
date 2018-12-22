@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.5.1536558586220
+ * Version: 0.3.6.1545466758512
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -124,11 +124,12 @@ __webpack_require__(1);
     }
 
     function AuiComponent(anestor) {
-        this.isCreated = false;
-
-        this.setTag(anestor.tag);
 
         this.$anestor = anestor;
+
+        this.isCreated = false;
+
+        this.setTag();
 
         this.addStyle();
 
@@ -180,8 +181,9 @@ __webpack_require__(1);
         getTag: function () {
             return this._tag;
         },
-        setTag: function (name) {
-            this._tag = formateName(name);
+        setTag: function () {
+            const anestor = this.$anestor;
+            this._tag = anestor.fullTag && anestor.fullTag.indexOf('-') > -1 ? anestor.fullTag.toLowerCase() : formateName(anestor.fullTag || anestor.tag);
         },
 
         addStyle: function () {
@@ -268,7 +270,7 @@ __webpack_require__(1);
     }
 
     function createElement(anestor) {
-        var tagName = formateName(anestor.tag);
+        var tagName = anestor.fullTag && anestor.fullTag.indexOf('-') > -1 ? anestor.fullTag.toLowerCase() : formateName(anestor.fullTag || anestor.tag);
         var extendElement = anestor.extendElement,
             extendTag;
         if (typeof extendElement === 'string') {

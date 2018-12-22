@@ -14,11 +14,12 @@
     }
 
     function AuiComponent(anestor) {
-        this.isCreated = false;
-
-        this.setTag(anestor.tag);
 
         this.$anestor = anestor;
+
+        this.isCreated = false;
+
+        this.setTag();
 
         this.addStyle();
 
@@ -70,8 +71,9 @@
         getTag: function(){
             return this._tag;
         },
-        setTag: function(name){
-            this._tag = formateName(name);
+        setTag: function(){
+            const anestor = this.$anestor;
+            this._tag = anestor.fullTag&&anestor.fullTag.indexOf('-')>-1?anestor.fullTag.toLowerCase() : formateName(anestor.fullTag || anestor.tag);
         },
 
         addStyle: function () {

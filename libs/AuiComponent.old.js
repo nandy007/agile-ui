@@ -14,7 +14,7 @@
     }
 
     function createElement(anestor){
-        var tagName = formateName(anestor.tag);
+        var tagName = anestor.fullTag&&anestor.fullTag.indexOf('-')>-1?anestor.fullTag.toLowerCase() : formateName(anestor.fullTag || anestor.tag);
         var extendElement = anestor.extendElement, extendTag;
         if(typeof extendElement==='string'){
             extendTag = extendElement;
