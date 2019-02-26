@@ -47,6 +47,7 @@
                     _this.innerHTML = template;
                     const $child = _this.querySelector('child');
                     if ($child) {
+                        _this.slotParent = $child.parentNode;
                         $child.parentNode.replaceChild($fragment, $child);
                     }
                 }

@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.6.1545466758512
+ * Version: 0.3.8.1551172742973
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -455,6 +455,7 @@ __webpack_require__(1);
                     _this.innerHTML = template;
                     const $child = _this.querySelector('child');
                     if ($child) {
+                        _this.slotParent = $child.parentNode;
                         $child.parentNode.replaceChild($fragment, $child);
                     }
                 }
@@ -569,6 +570,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '                        _this.innerHTML = template;',
 '                        const $child = _this.querySelector(\'child\');',
 '                        if ($child) {',
+'                            _this.slotParent = $child.parentNode;',
 '                            $child.parentNode.replaceChild($fragment, $child);',
 '                        }',
 '                    }',
