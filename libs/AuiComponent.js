@@ -37,6 +37,10 @@
         }
         if(!anestor.tag) anestor.tag = anestor.name;
         if(!anestor.template) anestor.template = template || '';
+        if(anestor.isNode){
+            var AuiNode = require('./AuiNode');
+            return AuiNode.cache(anestor);
+        }
         var aui = new AuiComponent(anestor);
         return aui.isCreated;
     };
