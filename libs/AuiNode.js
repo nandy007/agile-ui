@@ -48,8 +48,6 @@
         if(!tag) {
             tag = 'aui-' + anestor.tag.toLowerCase();
         }
-
-        console.debug(tag)
             
         AuiNode.nodes[tag] = anestor;
     };

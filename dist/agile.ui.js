@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.9.1552028945697
+ * Version: 0.3.10.1553247503811
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -428,8 +428,6 @@ __webpack_require__(1);
         if (!tag) {
             tag = 'aui-' + anestor.tag.toLowerCase();
         }
-
-        console.debug(tag);
 
         AuiNode.nodes[tag] = anestor;
     };
