@@ -5,6 +5,13 @@
     module.exports = AuiNode;
 })(function () {
 
+    var createElement = document.createElement;
+    document.createElement = function(){
+        var target = createElement.apply(document, arguments);
+        AuiNode.createSingle(target);
+        return target;
+    };
+
     function addEvent (elem, type, callback) {
         elem.addEventListener ?
                 elem.addEventListener(type, callback, false) :
@@ -95,6 +102,13 @@
 
     };
 
+    AuiNode.createSingle = function(curEl){
+        var tagName = AuiNode.getTag(curEl);
+        var anestor = AuiNode.nodes[tagName];
+        if(!anestor) return;
+        new AuiNode(curEl, anestor);
+    };
+
     AuiNode.remove = function(el){
 
         var els = AuiNode.getEls(el);
@@ -169,7 +183,7 @@
                     }
                 }
                 _this.isCreated = true;
-            }, false);
+            }, isAsync);
             _this.attachedCallback();
         },
         attachedCallback: function(){

@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.10.1553247503811
+ * Version: 0.3.11.1554004060250
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -391,6 +391,13 @@ __webpack_require__(1);
     module.exports = AuiNode;
 })(function () {
 
+    var createElement = document.createElement;
+    document.createElement = function () {
+        var target = createElement.apply(document, arguments);
+        AuiNode.createSingle(target);
+        return target;
+    };
+
     function addEvent(elem, type, callback) {
         elem.addEventListener ? elem.addEventListener(type, callback, false) : elem.attachEvent('on' + type, callback);
     }
@@ -473,6 +480,13 @@ __webpack_require__(1);
         }
     };
 
+    AuiNode.createSingle = function (curEl) {
+        var tagName = AuiNode.getTag(curEl);
+        var anestor = AuiNode.nodes[tagName];
+        if (!anestor) return;
+        new AuiNode(curEl, anestor);
+    };
+
     AuiNode.remove = function (el) {
 
         var els = AuiNode.getEls(el);
@@ -551,7 +565,7 @@ __webpack_require__(1);
                     }
                 }
                 _this.isCreated = true;
-            }, false);
+            }, isAsync);
             _this.attachedCallback();
         },
         attachedCallback: function () {
