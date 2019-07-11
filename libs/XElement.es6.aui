@@ -1,10 +1,11 @@
 <script type="text/javascript">
 // ie等不支持class定义，故通过字符串方式实例化function调用
 (function (factory) {
-    const XElement = factory();
-    module.exports = XElement;
-})(function () {
-
+    module.exports = function(util){
+        const XElement = factory(util);
+        return XElement;
+    };
+})(function (util) {
     function createElement(_HTMLElement){
         return class IElement extends _HTMLElement {
             constructor() {
@@ -48,18 +49,7 @@
                 this.emit('created', args, function () {
 
                     if (template) {
-
-                        const $fragment = document.createDocumentFragment();
-                        Array.from(_this.childNodes).forEach(function ($child) {
-                            $fragment.appendChild($child);
-                        });
-
-                        _this.innerHTML = template;
-                        const $child = _this.querySelector('child');
-                        if ($child) {
-                            _this.slotParent = $child.parentNode;
-                            $child.parentNode.replaceChild($fragment, $child);
-                        }
+                        util.createComp(_this, template);
                     }
 
                 }, isAsync);

@@ -4,6 +4,7 @@
     const AuiComponent = factory();
     module.exports = AuiComponent;
 })(function () {
+    var util = require('./util');
     function formateName(name) {
         if (!name) return '';
         name = name.toLowerCase();
@@ -66,16 +67,18 @@
 
                 if (template) {
 
-                    const $fragment = document.createDocumentFragment();
-                    Array.from(_this.childNodes).forEach(function ($child) {
-                        $fragment.appendChild($child);
-                    });
+                    // const $fragment = document.createDocumentFragment();
+                    // Array.from(_this.childNodes).forEach(function ($child) {
+                    //     $fragment.appendChild($child);
+                    // });
 
-                    _this.innerHTML = template;
-                    const $child = _this.querySelector('child');
-                    if ($child) {
-                        $child.parentNode.replaceChild($fragment, $child);
-                    }
+                    // _this.innerHTML = template;
+                    // const $child = _this.querySelector('child');
+                    // if ($child) {
+                    //     $child.parentNode.replaceChild($fragment, $child);
+                    // }
+
+                    util.createComp(_this, template);
                 }
 
             }, isAsync);

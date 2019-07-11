@@ -4,7 +4,7 @@
     const AuiNode = factory();
     module.exports = AuiNode;
 })(function () {
-
+    var util = require('./util');
     var createElement = document.createElement;
     document.createElement = function(){
         var target = createElement.apply(document, arguments);
@@ -170,17 +170,18 @@
             const isAsync = typeof createdSync==='undefined'?true:!createdSync;
             this.emit('created', [], function () {
                 if (template) {
-                    const $fragment = document.createDocumentFragment();
-                    Array.from(el.childNodes).forEach(function ($child) {
-                        $fragment.appendChild($child);
-                    });
+                    // const $fragment = document.createDocumentFragment();
+                    // Array.from(el.childNodes).forEach(function ($child) {
+                    //     $fragment.appendChild($child);
+                    // });
 
-                    el.innerHTML = template;
-                    const $child = el.querySelector('child');
-                    if ($child) {
-                        el.slotParent = $child.parentNode;
-                        $child.parentNode.replaceChild($fragment, $child);
-                    }
+                    // el.innerHTML = template;
+                    // const $child = el.querySelector('child');
+                    // if ($child) {
+                    //     el.slotParent = $child.parentNode;
+                    //     $child.parentNode.replaceChild($fragment, $child);
+                    // }
+                    util.createComp(el, template);
                 }
                 _this.isCreated = true;
             }, isAsync);
