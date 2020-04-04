@@ -69,7 +69,7 @@
             if(typeof window==='object'){
                 if(!window.auicomponents) window.auicomponents = {};
                 var name = this.createName();
-                auicomponents[name] = this.$anestor;
+                if(!auicomponents[name]) auicomponents[name] = this.$anestor;
             }
         },
         getTag: function(){

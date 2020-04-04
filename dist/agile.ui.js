@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.14.1585982671044
+ * Version: 0.3.15.1585986576412
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -76,7 +76,7 @@
 
 var util = module.exports = {
     getAnestor: function (anestor) {
-        return (typeof anestor.replacement === 'function' ? anestor.replacement() : anestor.replacement) || anestor;
+        return (typeof anestor.getReplacement === 'function' ? anestor.getReplacement() : anestor.replacement) || anestor;
     },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;
@@ -224,7 +224,7 @@ __webpack_require__(2);
             if (typeof window === 'object') {
                 if (!window.auicomponents) window.auicomponents = {};
                 var name = this.createName();
-                auicomponents[name] = this.$anestor;
+                if (!auicomponents[name]) auicomponents[name] = this.$anestor;
             }
         },
         getTag: function () {
