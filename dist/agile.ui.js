@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.13.1585968855280
+ * Version: 0.3.14.1585982671044
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -76,7 +76,7 @@
 
 var util = module.exports = {
     getAnestor: function (anestor) {
-        return anestor.replacement || anestor;
+        return (typeof anestor.replacement === 'function' ? anestor.replacement() : anestor.replacement) || anestor;
     },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;
