@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.12.1562832430051
+ * Version: 0.3.13.1585968855280
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -75,6 +75,9 @@
 
 
 var util = module.exports = {
+    getAnestor: function (anestor) {
+        return anestor.replacement || anestor;
+    },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;
         if (parent.lastChild == targetElement) {
@@ -690,7 +693,7 @@ __webpack_require__(2);
     }
 
     function IElement(anestor) {
-        this.$anestor = anestor;
+        this.$anestor = util.getAnestor(anestor);;
     }
 
     IElement.prototype = {
@@ -857,7 +860,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        const IElement = createElement(anestor.extendElement || HTMLElement);',
 '        class XElement extends IElement {',
 '            get $anestor() {',
-'                return anestor;',
+'                return util.getAnestor(anestor);;',
 '            }',
 '            static get observedAttributes() { return anestor.observedAttributes || []; }',
 '        }',

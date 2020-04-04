@@ -80,7 +80,7 @@
         const IElement = createElement(anestor.extendElement || HTMLElement);
         class XElement extends IElement {
             get $anestor() {
-                return anestor;
+                return util.getAnestor(anestor);;
             }
 
             static get observedAttributes() { return anestor.observedAttributes || []; }

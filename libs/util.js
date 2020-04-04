@@ -1,5 +1,8 @@
 
 var util = module.exports = {
+    getAnestor: function(anestor){
+        return anestor.replacement || anestor;
+    },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;
         if (parent.lastChild == targetElement) {
