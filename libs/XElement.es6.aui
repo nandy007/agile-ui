@@ -10,7 +10,6 @@
         return class IElement extends _HTMLElement {
             constructor() {
                 super();
-                
             }
 
             bindModule() {
@@ -80,7 +79,7 @@
         const IElement = createElement(anestor.extendElement || HTMLElement);
         class XElement extends IElement {
             get $anestor() {
-                return util.getAnestor(anestor);;
+                return util.getAnestor(anestor);
             }
 
             static get observedAttributes() { return anestor.observedAttributes || []; }
