@@ -1,7 +1,7 @@
 
 var util = module.exports = {
-    getAnestor: function(anestor){
-        return (typeof anestor.getReplacement === 'function' ? anestor.getReplacement() : anestor.replacement ) || anestor;
+    getAnestor: function(anestor, el){
+        return (typeof anestor.getReplacement === 'function' ? anestor.getReplacement(el) : anestor.replacement ) || anestor;
     },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;

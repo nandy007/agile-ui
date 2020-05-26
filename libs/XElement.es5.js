@@ -68,7 +68,7 @@
 
             sp.bindModule = function () {
                 if(this.component) return;
-                const Component = this.$anestor = util.getAnestor(ielement.anestor);
+                const Component = this.$anestor = util.getAnestor(ielement.anestor, this);
                 const component = this.component = typeof Component === 'function' ? new Component(this) : {};
                 component.template = Component.template || '';
                 component.$el = this;

@@ -79,7 +79,7 @@
         const IElement = createElement(anestor.extendElement || HTMLElement);
         class XElement extends IElement {
             get $anestor() {
-                return util.getAnestor(anestor);
+                return util.getAnestor(anestor, this);
             }
 
             static get observedAttributes() { return anestor.observedAttributes || []; }

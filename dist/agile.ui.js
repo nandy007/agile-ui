@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.16.1590399282844
+ * Version: 0.3.17.1590489175793
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -75,8 +75,8 @@
 
 
 var util = module.exports = {
-    getAnestor: function (anestor) {
-        return (typeof anestor.getReplacement === 'function' ? anestor.getReplacement() : anestor.replacement) || anestor;
+    getAnestor: function (anestor, el) {
+        return (typeof anestor.getReplacement === 'function' ? anestor.getReplacement(el) : anestor.replacement) || anestor;
     },
     insertAfter: function (newElement, targetElement) {
         var parent = targetElement.parentNode;
@@ -751,7 +751,7 @@ __webpack_require__(2);
 
             sp.bindModule = function () {
                 if (this.component) return;
-                const Component = this.$anestor = util.getAnestor(ielement.anestor);
+                const Component = this.$anestor = util.getAnestor(ielement.anestor, this);
                 const component = this.component = typeof Component === 'function' ? new Component(this) : {};
                 component.template = Component.template || '';
                 component.$el = this;
@@ -893,7 +893,7 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '        const IElement = createElement(anestor.extendElement || HTMLElement);',
 '        class XElement extends IElement {',
 '            get $anestor() {',
-'                return util.getAnestor(anestor);',
+'                return util.getAnestor(anestor, this);',
 '            }',
 '            static get observedAttributes() { return anestor.observedAttributes || []; }',
 '        }',
