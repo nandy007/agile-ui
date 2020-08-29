@@ -83,7 +83,9 @@
                 };
     
                 if(isAsync){
-                    setTimeout(_func, 1);
+                    Promise.resolve().then(function(){
+                        _func();
+                    });
                 }else{
                     _func();
                 }

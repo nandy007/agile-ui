@@ -1,6 +1,6 @@
 /*!
  * Agile UI HTML5组件化框架
- * Version: 0.3.17.1590489175793
+ * Version: 0.3.18.1598688160148
  * Author: nandy007
  * License MIT @ https://github.com/nandy007/agile-ui
  */
@@ -767,7 +767,9 @@ __webpack_require__(2);
                 };
 
                 if (isAsync) {
-                    setTimeout(_func, 1);
+                    Promise.resolve().then(function () {
+                        _func();
+                    });
                 } else {
                     _func();
                 }
@@ -855,7 +857,9 @@ const __str__ = ['// ie等不支持class定义，故通过字符串方式实例�
 '                    func && func.apply(component, args);',
 '                };',
 '                if(isAsync){',
-'                    setTimeout(_func, 1);',
+'                    Promise.resolve().then(function(){',
+'                        _func();',
+'                    });',
 '                }else{',
 '                    _func();',
 '                };',
