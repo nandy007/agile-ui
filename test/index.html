@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <script src="../libs/AuiSuper.js"></script>
+    <!-- <script src="../../agile-ce/dist/agile.ce.browser.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.0.0-beta.14/dist/vue.global.js"></script>
+    <script>
+
+        // $.vm.setVMPre({
+        //     data: 'data',
+        //     method: 'methods'
+        // });
+
+        // Vue.config.ignoredElements = ['child'];
+
+        const {AuiComponent, AuiMng} = window;
+
+        AuiComponent.prototype._hook = function(){};
+
+        class Test extends AuiComponent{
+
+            uiTemplate(){
+                return `<div>{{title}} <child></child>, i am test. <span v-for="item,$index in arr" v-on:click="callMe(item, $index)">{{item.text}}</span></div>`;
+            }
+
+            styleTemplate(){
+                return `aui-test{ display: block; background: red; }`;
+            }
+
+            render(tplEl, cb){
+
+                this.structure = {
+                    data: ()=>{
+                        return {
+                            title: 'hi',
+                            arr: [
+                                {
+                                    text: 'tom',
+                                    age: 18
+                                },
+                                {
+                                    text: 'lily',
+                                    age: 22
+                                }
+                            ]
+                        };
+                    },
+                    methods: {
+                        callMe(item, $index){
+                            console.log(item.age, $index);
+                        }
+                    }
+                };
+
+                // this.mvvm = $(tplEl).render(this.structure);
+                // this.origin.childNodes.forEach(node => {
+                //     this.mvvm.vm.compileSteps($(node));
+                // });
+
+                const app = Vue.createApp({
+                    // el: tplEl,
+                    data: this.structure.data,
+                    methods: this.structure.methods,
+                });
+
+                app.mount(tplEl);
+
+                this.tplEl = app._container;
+            }
+
+            created(){
+                // this.render();    
+            }
+        }
+
+        AuiMng.register('aui-test', Test);
+    </script>
+</head>
+<body>
+    <div id="app">
+        <aui-test v-bind:title="title">{{title}}<aui-test v-for="item in arr">{{item.text}}</aui-test></aui-test>
+    </div>
+    <script>
+        // document.querySelector('aui-test').appendChild(document.createTextNode('added'));
+        
+        // const mvvm = $('#app').render({
+        //     data: {
+        //         title:'outer',
+        //         arr: [
+        //             {
+        //                 text: 'lilei'
+        //             },
+        //             {
+        //                 text: 'hanmeimei'
+        //             }
+        //         ]
+        //     }
+        // })
+
+        // setTimeout(()=>{
+        //     console.time();
+        //     for(let i=0;i<10000;i++){
+        //         mvvm.$data.data.arr.push({
+        //             text: 'nandy' + i
+        //         });
+        //     }
+        //     console.timeEnd();
+        //     // 6279.3798828125ms
+        // }, 1000);
+
+        
+
+        let app = Vue.createApp({
+            // el: '#app',
+            data: ()=>{
+                return {
+                    title:'outer',
+                    arr: [
+                        {
+                            text: 'lilei'
+                        },
+                        {
+                            text: 'hanmeimei'
+                        }
+                    ]
+                };
+            },
+            mounted(){
+                app = this;
+            }
+        });
+
+        app.mount('#app');
+
+        setTimeout(()=>{
+            console.time();
+            for(let i=0;i<10000;i++){
+                app.arr.push({
+                    text: 'nandy' + i
+                });
+            }
+            console.timeEnd();
+            // default: 53.633056640625ms
+        }, 1000);
+
+        
+
+        // console.log(document.querySelector('aui-test').childNodes[2].childNodes.length)
+    </script>
+</body>
+</html>
