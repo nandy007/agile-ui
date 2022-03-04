@@ -1,6 +1,6 @@
 {
   "name": "agile-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "组件化的ui框架",
   "main": "index.js",
   "scripts": {
